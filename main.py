@@ -91,3 +91,29 @@ threading.Thread(target=auto_promote).start()
 @bot.message_handler(commands=['id'])
 def get_id(message):
     bot.reply_to(message, f"Group ID: {message.chat.id}")
+import time
+import threading
+
+PROMO_MESSAGES = [
+    "❄️🐉 $LVZ — Leviathanzilla is awakening! Join now!",
+    "Early $LVZ holders = future legends 💎 #LVZ",
+    "Next Solana Ice Dragon? Leviathanzilla 🐉❄️",
+    "Ice Dragon > Paper Hands ❄️💎 $LVZ",
+    "Missed BONK? Don’t miss $LVZ 🚀"
+]
+
+CHAT_ID = -5194041530
+
+
+def auto_promote():
+    while True:
+        for msg in PROMO_MESSAGES:
+            try:
+                bot.send_message(CHAT_ID, msg)
+                time.sleep(3600)  # 1 hour
+            except Exception as e:
+                print("Promo error:", e)
+                time.sleep(60)
+
+
+threading.Thread(target=auto_promote, daemon=True).start()

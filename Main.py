@@ -1,22 +1,25 @@
+import os
 import telebot
 import requests
-import os
+from solana.publickey import PublicKey
 
-TOKEN = os.getenv("BOT_TOKEN")
+# Load env vars
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+HEL_RPC = os.getenv("HELIUS_RPC_URL", "").strip()
+TRACK_WALLET = "5JRoTbZKpzxPVsH22ngJj31nWQuuLxpSWpDTubMvRDKY"
 
-TARGET_TOKEN = "Duj5mm4pyY6E4RXGpN4oVGtvVns5AzBYGknxTVYnpump"
-
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(BOT_TOKEN)
 
 
 @bot.message_handler(commands=["start"])
 def start(msg):
     bot.send_message(
         msg.chat.id,
-        "🚀 Solana AI Bot Active\n"
-        "Mode: Semi-Auto\n\n"
-        "Commands:\n"
-        "/price\n/status\n/analyze\n/help"
+        "🚀 Solana AI Bot Ready! Commands:\n"
+        "/balance - Wallet balance\n"
+        "/recent - Recent txs\n"
+        "/scan - Token scanner\n"
+        "/help - Show commands"
     )
 
 
@@ -24,45 +27,49 @@ def start(msg):
 def help_cmd(msg):
     bot.send_message(
         msg.chat.id,
-        "/price - Token price\n"
-        "/status - Bot status\n"
-        "/analyze - Market view"
+        "/balance - Wallet balance\n"
+        "/recent - Recent transactions\n"
+        "/scan <min_vol> - Scan new tokens"
     )
 
 
-@bot.message_handler(commands=["status"])
-def status(msg):
-    bot.send_message(msg.chat.id, "✅ Running (Railway Cloud)")
-
-
-@bot.message_handler(commands=["price"])
-def price(msg):
+@bot.message_handler(commands=["balance"])
+def balance(msg):
     try:
-        url = f"https://api.dexscreener.com/latest/dex/tokens/{TARGET_TOKEN}"
-        r = requests.get(url).json()
+        # Call Helius RPC for balance
+        url = f"{HEL_RPC}&address={TRACK_WALLET}"
+        res = requests.get(url).json()
+        lamports = res.get("value", [{}])[0].get("balance", 0)
+        sol_balance = lamports / 1e9
 
-        pair = r["pairs"][0]
-        price = pair["priceUsd"]
+        bot.send_message(msg.chat.id, f"👛 Wallet Balance: {sol_balance} SOL")
+    except Exception as e:
+        bot.send_message(msg.chat.id, "⚠️ Could not fetch balance")
 
-        bot.send_message(
-            msg.chat.id,
-            f"💰 Token Price: ${price}"
-        )
+    
+@bot.message_handler(commands=["recent"])
+def recent(msg):
+    try:
+        url = f"{HEL_RPC}&address={TRACK_WALLET}"
+        data = requests.get(url).json()
+        txs = data[:5]
+        reply = "📜 Recent Transactions:\n"
+        for tx in txs:
+            sig = tx.get("signature")
+            reply += f"- {sig}\n"
+        bot.send_message(msg.chat.id, reply)
     except:
-        bot.send_message(msg.chat.id, "⚠️ Price unavailable")
+        bot.send_message(msg.chat.id, "⚠️ Cannot load recent txs")
 
 
-@bot.message_handler(commands=["analyze"])
-def analyze(msg):
-    bot.send_message(
-        msg.chat.id,
-        "📊 Analysis\n"
-        "Trend: Neutral\n"
-        "Momentum: Medium\n"
-        "Risk: Moderate\n\n"
-        "Recommendation: Wait for volume."
-    )
+@bot.message_handler(commands=["scan"])
+def scan(msg):
+    parts = msg.text.split()
+    min_vol = float(parts[1]) if len(parts) > 1 else 1000
+    # Temporary placeholder scanner (dummy response)
+    bot.send_message(msg.chat.id,
+                     f"🔍 Scanning tokens with min volume ≥ {min_vol} USDC...\n"
+                     "Feature coming soon!")
+    
 
-
-print("Bot started...")
-bot.infinity_polling()
+bot.polling()

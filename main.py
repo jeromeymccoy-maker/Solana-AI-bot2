@@ -115,5 +115,8 @@ def auto_promote():
                 print("Promo error:", e)
                 time.sleep(60)
 
+@bot.message_handler(commands=['shill'])
+def shill(message):
+    bot.send_message(CHAT_ID, PROMO_MESSAGES[0])
 
 threading.Thread(target=auto_promote, daemon=True).start()

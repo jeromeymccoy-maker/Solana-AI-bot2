@@ -65,3 +65,25 @@ def recent(m):
 
 print("Bot started...")
 bot.infinity_polling()
+import time
+import threading
+
+PROMO_MESSAGES = [
+    "❄️🐉 $LVZ — Leviathanzilla is awakening! Join Leviathanzilla",
+    "Early $LVZ holders = future legends 💎",
+    "Next Solana dragon? Leviathanzilla 🐉",
+    "Ice Dragon > Paper Hands ❄️💎",
+    "Missed BONK? Don’t miss $LVZ 🚀"
+]
+
+CHAT_ID = "YOUR_TELEGRAM_GROUP_ID"
+
+
+def auto_promote():
+    while True:
+        for msg in PROMO_MESSAGES:
+            bot.send_message(CHAT_ID, msg)
+            time.sleep(3600)  # 1 hour
+
+
+threading.Thread(target=auto_promote).start()

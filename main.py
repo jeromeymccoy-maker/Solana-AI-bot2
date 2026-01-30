@@ -83,7 +83,11 @@ def auto_promote():
     while True:
         for msg in PROMO_MESSAGES:
             bot.send_message(CHAT_ID, msg)
+            
             time.sleep(3600)  # 1 hour
 
 
 threading.Thread(target=auto_promote).start()
+@bot.message_handler(commands=['id'])
+def get_id(message):
+    bot.reply_to(message, f"Group ID: {message.chat.id}")

@@ -166,3 +166,18 @@ Risk: Low
 bot.send_message(CHAT_ID, msg)
 
 print("Alert sent!")
+import os
+import telebot
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+bot = telebot.TeleBot(BOT_TOKEN)
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(
+        message.chat.id,
+        f"Your Chat ID is: {message.chat.id}"
+    )
+
+print("Bot is running...")
+bot.polling()

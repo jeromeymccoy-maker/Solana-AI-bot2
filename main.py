@@ -140,7 +140,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
  "SNIPER ALERT\nBuy: 0.15 SOL\nTarget: 20%\nStop: 10%"
 Token: LVZ
-
+print("Entry: $0.00012")
 SL: $0.00010
 TP: $0.00018
 Risk: Low

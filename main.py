@@ -128,4 +128,13 @@ def get_sol_price():
 usd = round(0.15 * price, 2)
 
 msg = f"🚨 SNIPER ALERT\nBuy: 0.15 SOL (~${usd})"
-bot.send_message(chat_id, msg)
+bot.send_message(chat_id, msg)import os
+import telebot
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN is missing")
+
+bot = telebot.TeleBot(BOT_TOKEN)
+

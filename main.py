@@ -138,3 +138,9 @@ if not BOT_TOKEN:
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
+🚨 SNIPER ALERT
+Token: LVZ
+Entry: $0.00012
+SL: $0.00010
+TP: $0.00018
+Risk: Low

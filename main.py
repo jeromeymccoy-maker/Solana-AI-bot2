@@ -144,3 +144,4 @@ print("Entry: $0.00012")
 SL: $0.00010
 TP: $0.00018
 Risk: Low
+main.py

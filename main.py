@@ -120,3 +120,12 @@ def shill(message):
     bot.send_message(CHAT_ID, PROMO_MESSAGES[0])
 
 threading.Thread(target=auto_promote, daemon=True).start()
+def get_sol_price():
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
+    r = requests.get(url, timeout=10).json()
+    return r["solana"]["usd"]
+    price = get_sol_price()
+usd = round(0.15 * price, 2)
+
+msg = f"🚨 SNIPER ALERT\nBuy: 0.15 SOL (~${usd})"
+bot.send_message(chat_id, msg)

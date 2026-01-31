@@ -127,7 +127,7 @@ def get_sol_price():
     price = get_sol_price()
 usd = round(0.15 * price, 2)
 
-msg = f"🚨 SNIPER ALERT\nBuy: 0.15 SOL 
+msg 🚨 SNIPER ALERT\nBuy: 0.15 SOL 
 bot.send_message(chat_id, msg)
 import telebot
 

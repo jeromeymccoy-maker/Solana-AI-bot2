@@ -138,7 +138,7 @@ if not BOT_TOKEN:
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-msg = "🚨 SNIPER ALERT\nBuy: 0.15 SOL\nTarget: 20%\nStop: 10%"
+ "SNIPER ALERT\nBuy: 0.15 SOL\nTarget: 20%\nStop: 10%"
 Token: LVZ
 Entry: $0.00012
 SL: $0.00010

@@ -126,22 +126,43 @@ def get_sol_price():
     return r["solana"]["usd"]
     price = get_sol_price()
 usd = round(0.15 * price, 2)
-
-msg = f"🚨 SNIPER ALERT\nBuy: 0.15 SOL (~${usd})"
-bot.send_message(chat_id, msg)
+import os
 import telebot
 
+# Get bot token from environment
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is missing")
 
+# Create bot
 bot = telebot.TeleBot(BOT_TOKEN)
 
- "SNIPER ALERT\nBuy: 0.15 SOL\nTarget: 20%\nStop: 10%"
+# Your chat ID (replace with yours)
+CHAT_ID = "YOUR_CHAT_ID"
+
+# Example values
+usd = 25.50
+
+# Message
+msg = f"""
+🚨 SNIPER ALERT 🚨
+
 Token: LVZ
-print("Entry: $0.00012")
-SL: $0.00010
+
+Buy: 0.15 SOL (~${usd})
+Entry: $0.00012
+
+Target: 20%
 TP: $0.00018
+
+Stop: 10%
+SL: $0.00010
+
 Risk: Low
-main.py
+"""
+
+# Send message
+bot.send_message(CHAT_ID, msg)
+
+print("Alert sent!")

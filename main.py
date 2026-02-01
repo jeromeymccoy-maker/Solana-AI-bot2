@@ -181,3 +181,81 @@ def start(message):
 
 print("Bot is running...")
 bot.polling()
+import requests
+import telebot
+import schedule
+import time
+
+# ======================
+# CONFIGURATION
+# ======================
+
+# ← REPLACE THIS with your Telegram Bot Token from BotFather
+BOT_TOKEN = 8364191087:AAHLZ_U8BhFxS358KnH14M3U51z75RF_HdI
+
+# ← REPLACE THIS with your Telegram Chat ID from @userinfobot
+CHAT_ID =938702556
+
+# Token Info
+TOKEN_NAME = "Leviathanzilla"
+SYMBOL = "❄️🐉"
+CHAIN = "Solana"
+CONTRACT = "Duj5mm4pyY6E4RXGpN4oVGtvVns5AzBYGknxTVYnpump"
+
+# DexScreener API (price/volume)
+DEX_API = f"https://api.dexscreener.com/latest/dex/tokens/{CONTRACT}"
+
+# Initialize bot
+bot = telebot.TeleBot(BOT_TOKEN)
+
+# ======================
+# FUNCTION: Check Price
+# ======================
+
+def check_price():
+    try:
+        r = requests.get(DEX_API)
+        if r.status_code != 200:
+            print("Error fetching data from DexScreener")
+            return
+
+        data = r.json()
+        pairs = data.get("pairs")
+
+        if not pairs:
+            print("No trading pairs found")
+            return
+
+        pair = pairs[0]
+        price = pair.get("priceUsd", "N/A")
+        vol = pair.get("volume", {}).get("h24", "N/A")
+
+        # Message to send to Telegram
+        msg = f"""
+❄️🐉 Leviathanzilla Update
+
+💰 Price: ${price}
+📊 24h Volume: {vol}
+🔗 Contract: {CONTRACT}
+
+Join our Telegram: t.me/Leviathanzilla
+"""
+        bot.send_message(CHAT_ID, msg)
+        print("Update sent to Telegram!")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+# ======================
+# SCHEDULER
+# ======================
+
+# Check price every 30 minutes
+schedule.every(30).minutes.do(check_price)
+
+print("Leviathanzilla Bot Running...")
+check_price()  # Run once immediately
+
+while True:
+    schedule.run_pending()
+    time.sleep(10)

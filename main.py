@@ -301,3 +301,53 @@ def handle_start(message):
 if __name__ == "__main__":
     print("Bot is polling for messages...")
     bot.infinity_polling()
+import os
+import time
+import telebot
+from telebot.apihelper import ApiException, NetworkError
+
+# Get the bot token from environment variables
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN environment variable is missing!")
+
+# Initialize the bot
+bot = telebot.TeleBot(BOT_TOKEN)
+
+# Replace with your actual Telegram chat ID
+CHAT_ID =938702556
+
+# Function to send a test message on startup
+def send_startup_message():
+    try:
+        bot.send_message(CHAT_ID, "✅ Bot started successfully!")
+        print("Startup message sent successfully.")
+    except ApiException as e:
+        print(f"Failed to send startup message: {e}")
+
+# Call startup message
+send_startup_message()
+
+# Example command handler
+@bot.message_handler(commands=['start'])
+def handle_start(message):
+    bot.reply_to(message, "Hello! Bot is running.")
+
+# Robust polling with automatic reconnect
+def run_bot():
+    while True:
+        try:
+            print("Bot is polling for messages...")
+            bot.infinity_polling(timeout=10, long_polling_timeout=5)
+        except NetworkError as e:
+            print(f"Network error occurred: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
+        except ApiException as e:
+            print(f"Telegram API error occurred: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
+        except Exception as e:
+            print(f"Unexpected error: {e}. Reconnecting in 5 seconds...")
+            time.sleep(5)
+
+if __name__ == "__main__":
+    run_bot()

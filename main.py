@@ -266,3 +266,38 @@ check_price()  # Run once immediately
 while True:
     schedule.run_pending()
     time.sleep(10)
+import os
+import telebot
+from telebot.apihelper import ApiException
+
+# Get the bot token from environment variables
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN environment variable is missing!")
+
+# Initialize the bot
+bot = telebot.TeleBot(BOT_TOKEN)
+
+# Set your chat ID (replace with your own chat ID)
+CHAT_ID =938702556
+
+# Function to send a test message
+def send_startup_message():
+    try:
+        bot.send_message(CHAT_ID, "✅ Bot started successfully!")
+        print("Startup message sent successfully.")
+    except ApiException as e:
+        print(f"Failed to send startup message: {e}")
+
+# Call the startup message function
+send_startup_message()
+
+# Example: keep the bot running and listening for commands
+@bot.message_handler(commands=['start'])
+def handle_start(message):
+    bot.reply_to(message, "Hello! Bot is running.")
+
+# Start polling (listening for messages)
+if __name__ == "__main__":
+    print("Bot is polling for messages...")
+    bot.infinity_polling()

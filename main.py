@@ -191,7 +191,14 @@ import time
 # ======================
 
 # ← REPLACE THIS with your Telegram Bot Token from BotFather
-BOT_TOKEN = 8364191087:AAHLZ_U8BhFxS358KnH14M3U51z75RF_HdI
+import os
+import telebot
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN environment variable is missing!")
+
+bot = telebot.TeleBot(BOT_TOKEN)
 
 # ← REPLACE THIS with your Telegram Chat ID from @userinfobot
 CHAT_ID =938702556

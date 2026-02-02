@@ -3,7 +3,8 @@ import time
 import threading
 import requests
 import telebot
-from telebot.apihelper import ApiException, NetworkError
+from telebot.apihelper import ApiException
+import requests
 
 # ================== CONFIG ==================
 
